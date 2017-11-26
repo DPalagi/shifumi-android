@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/colorBackground"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:gravity="center"
+        >
+
+    <!--Players info-->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            >
+
+        <ImageView
+                android:id="@+id/battle_first_player_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                tools:src="@drawable/ic_person"
+                />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/versus"
+                style="@style/TextStyle.Title"
+                android:textAllCaps="true"
+                />
+
+        <ImageView
+                android:id="@+id/battle_second_player_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                tools:src="@drawable/ic_robot"
+                />
+
+    </LinearLayout>
+
+    <!--Game status and actions-->
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            >
+
+        <ImageView
+                android:id="@+id/battle_first_cup"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:tint="@color/colorText"
+                android:src="@drawable/ic_trophy"
+                android:layout_alignParentLeft="true"
+                android:visibility="gone"
+                />
+
+        <TextView
+                android:id="@+id/battle_chrono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextStyle.Title"
+                tools:text="3"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                />
+
+        <ImageButton
+                android:id="@+id/battle_game_action"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                tools:src="@drawable/ic_play_circle_outline"
+                android:layout_centerInParent="true"
+                style="@style/ImageButtonStyle"
+                />
+
+        <ImageView
+                android:id="@+id/battle_second_cup"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:tint="@color/colorText"
+                android:src="@drawable/ic_trophy"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                />
+
+    </RelativeLayout>
+
+    <!--Actions selection-->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+        <!--Player 1 actions-->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                >
+
+            <ImageButton
+                    android:id="@+id/battle_fp_rock"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    style="@style/ImageButtonStyle"
+                    android:src="@drawable/rock_borderless"
+                    android:background="@drawable/button_background"
+                    />
+
+            <ImageButton
+                    android:id="@+id/battle_fp_paper"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    style="@style/ImageButtonStyle"
+                    android:src="@drawable/paper_borderless"
+                    android:background="@drawable/button_background"
+                    android:layout_marginTop="8dp"
+                    />
+
+            <ImageButton
+                    android:id="@+id/battle_fp_scissors"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    style="@style/ImageButtonStyle"
+                    android:src="@drawable/scissors_borderless"
+                    android:background="@drawable/button_background"
+                    android:layout_marginTop="8dp"
+                    />
+
+        </LinearLayout>
+
+        <!--Player 2 actions-->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical|right"
+                android:layout_weight="1"
+                >
+
+            <ImageButton
+                    android:id="@+id/battle_sp_rock"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    style="@style/ImageButtonStyle"
+                    android:src="@drawable/rock_borderless"
+                    android:background="@drawable/button_background"
+                    />
+
+            <ImageButton
+                    android:id="@+id/battle_sp_paper"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    style="@style/ImageButtonStyle"
+                    android:src="@drawable/paper_borderless"
+                    android:background="@drawable/button_background"
+                    android:layout_marginTop="8dp"
+                    />
+
+            <ImageButton
+                    android:id="@+id/battle_sp_scissors"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    style="@style/ImageButtonStyle"
+                    android:src="@drawable/scissors_borderless"
+                    android:background="@drawable/button_background"
+                    android:layout_marginTop="8dp"
+                    />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

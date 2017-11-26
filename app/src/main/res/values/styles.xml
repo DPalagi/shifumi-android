@@ -41,4 +41,9 @@
         <item name="android:tint">@color/colorText</item>
         <item name="android:padding">8dp</item>
     </style>
+    <style name="ImageButtonStyle">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tint">@color/colorText</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
 </resources>
