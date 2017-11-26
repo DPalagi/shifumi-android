@@ -6,6 +6,39 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorText</item>
     </style>
 
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <!--Texts styles-->
+    <style name="TextStyle">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">10</item>
+        <item name="android:shadowDy">10</item>
+    </style>
+    <style name="TextStyle.Title" parent="TextStyle">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <!--Buttons styles-->
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tint">@color/colorText</item>
+        <item name="android:padding">8dp</item>
+    </style>
 </resources>

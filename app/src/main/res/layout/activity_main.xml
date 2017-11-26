@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        >
+
+    <TextView
+            android:id="@+id/select_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_mode"
+            style="@style/TextStyle.Title"
+            android:layout_marginTop="48dp"
+            />
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:src="@drawable/shifumi"
+            android:layout_below="@id/select_title"
+            android:layout_centerHorizontal="true"
+            />
+
+    <Button
+            android:id="@+id/select_first_mode"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:text="@string/player_vs_ia"
+            style="@style/ButtonStyle"
+            android:drawableStart="@drawable/ic_person"
+            android:drawableEnd="@drawable/ic_robot"
+            android:layout_centerInParent="true"
+            />
+
+    <Button
+            android:id="@+id/select_second_mode"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/ia_vs_ia"
+            style="@style/ButtonStyle"
+            android:drawableStart="@drawable/ic_robot"
+            android:drawableEnd="@drawable/ic_robot"
+            android:layout_below="@id/select_first_mode"
+            android:layout_centerInParent="true"
+            />
+
+</RelativeLayout>

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Shifumi</string>
+    <string name="select_mode">Select Mode</string>
+
+    <string name="player_vs_ia">player VS IA</string>
+    <string name="ia_vs_ia">IA VS IA</string>
 </resources>
