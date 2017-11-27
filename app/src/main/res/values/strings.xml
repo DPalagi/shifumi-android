@@ -5,4 +5,5 @@
     <string name="player_vs_ia">player VS IA</string>
     <string name="ia_vs_ia">IA VS IA</string>
     <string name="versus">versus</string>
+    <string name="press_to_quit">Press again to quit the app!</string>
 </resources>

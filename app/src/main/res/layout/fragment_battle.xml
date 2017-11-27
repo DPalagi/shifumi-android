@@ -19,7 +19,7 @@
             >
 
         <ImageView
-                android:id="@+id/battle_first_player_icon"
+                android:id="@+id/battle_fp_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 tools:src="@drawable/ic_person"
@@ -38,7 +38,7 @@
                 android:id="@+id/battle_second_player_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                tools:src="@drawable/ic_robot"
+                android:src="@drawable/ic_robot"
                 />
 
     </LinearLayout>
