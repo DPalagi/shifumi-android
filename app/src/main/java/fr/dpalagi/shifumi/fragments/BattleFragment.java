@@ -1,5 +1,6 @@
 package fr.dpalagi.shifumi.fragments;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -101,9 +102,6 @@ public class BattleFragment extends Fragment
         firstCup = layout.findViewById(R.id.battle_first_cup);
         secondCup = layout.findViewById(R.id.battle_second_cup);
 
-        // Get game action ready to go
-        gameControlButton.setImageResource(R.drawable.ic_play_circle_outline);
-
         // Extract config params ==> consider that user can play by default
         Bundle args = getArguments();
         hasHuman = args.getBoolean(HAS_HUMAN_KEY, true);
@@ -141,31 +139,36 @@ public class BattleFragment extends Fragment
         if (forHuman)
         {
             firstPlayerIcon.setImageResource(R.drawable.ic_person);
-            // Listeners
-            firstPlayerRock.setOnClickListener(new View.OnClickListener()
+            // Listener
+            View.OnClickListener clickListener = new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    firstPlayer.play(new RockAction());
+                    if (!firstPlayer.hasAlreadyPlayed())
+                    {
+                        GameAction action = null;
+                        switch (view.getId())
+                        {
+                            case R.id.battle_fp_rock:
+                                action = new RockAction();
+                                break;
+                            case R.id.battle_fp_paper:
+                                action = new PaperAction();
+                                break;
+                            case R.id.battle_fp_scissors:
+                                action = new ScissorsAction();
+                                break;
+                        }
+                        firstPlayer.play(action);
+                        animateSelectedButton(view, true);
+                    }
                 }
-            });
-            firstPlayerPaper.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    firstPlayer.play(new PaperAction());
-                }
-            });
-            firstPlayerScissors.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    firstPlayer.play(new ScissorsAction());
-                }
-            });
+            };
+
+            firstPlayerRock.setOnClickListener(clickListener);
+            firstPlayerPaper.setOnClickListener(clickListener);
+            firstPlayerScissors.setOnClickListener(clickListener);
         }
         else
         {
@@ -206,12 +209,12 @@ public class BattleFragment extends Fragment
                     {
                         ((IAPlayer) secondPlayer).playRandom();
                     }
+                    // Animations and full results
+                    announceRoundResult();
 
                     // Hide timer
                     timerText.setVisibility(View.GONE);
-                    // Display again
                     gameControlButton.setVisibility(View.VISIBLE);
-                    announceRoundResult();
                 }
             };
         }
@@ -220,11 +223,12 @@ public class BattleFragment extends Fragment
         gameControlButton.setVisibility(View.INVISIBLE);
         timerText.setVisibility(View.VISIBLE);
 
-        drawIcon.setVisibility(View.GONE);
-        firstCup.setVisibility(View.GONE);
-        secondCup.setVisibility(View.GONE);
+        drawIcon.setVisibility(View.INVISIBLE);
+        firstCup.setVisibility(View.INVISIBLE);
+        secondCup.setVisibility(View.INVISIBLE);
 
         // Reset users actions
+        resetActionButtonsState();
         firstPlayer.resetLastAction();
         secondPlayer.resetLastAction();
 
@@ -241,11 +245,43 @@ public class BattleFragment extends Fragment
     /**
      * Compare the GameAction of each player to tell who wins, loses or if there is a draw
      */
+
     private void announceRoundResult()
     {
         // Last actions of each player, to compare
         GameAction fpAction = firstPlayer.getLastAction();
         GameAction spAction = secondPlayer.getLastAction();
+
+        // Display first IA game
+        if (!hasHuman)
+        {
+            if (fpAction instanceof RockAction)
+            {
+                animateSelectedButton(firstPlayerRock, true);
+            }
+            else if (fpAction instanceof PaperAction)
+            {
+                animateSelectedButton(firstPlayerPaper, true);
+            }
+            else if (fpAction instanceof ScissorsAction)
+            {
+                animateSelectedButton(firstPlayerScissors, true);
+            }
+        }
+        // Display second IA game
+        if (spAction instanceof RockAction)
+        {
+            animateSelectedButton(secondPlayerRock, false);
+        }
+        else if (spAction instanceof PaperAction)
+        {
+            animateSelectedButton(secondPlayerPaper, false);
+        }
+        else if (spAction instanceof ScissorsAction)
+        {
+            animateSelectedButton(secondPlayerScissors, false);
+        }
+
 
         // First player has played something ==> look at result
         if (firstPlayer.hasAlreadyPlayed())
@@ -253,13 +289,13 @@ public class BattleFragment extends Fragment
             switch (fpAction.versus(spAction))
             {
                 case WIN:
-                    updateUI(true, false);
+                    updateResultIcons(true, false);
                     break;
                 case DRAW:
-                    updateUI(false, true);
+                    updateResultIcons(false, true);
                     break;
                 case LOSE:
-                    updateUI(false, false);
+                    updateResultIcons(false, false);
                     break;
             }
         }
@@ -269,12 +305,12 @@ public class BattleFragment extends Fragment
             // Draw
             if (!secondPlayer.hasAlreadyPlayed())
             {
-                updateUI(false, true);
+                updateResultIcons(false, true);
             }
             // Lose
             else
             {
-                updateUI(false, false);
+                updateResultIcons(false, false);
             }
         }
     }
@@ -285,29 +321,90 @@ public class BattleFragment extends Fragment
      * @param firstWin if true, first player has won. If false, can be draw or second player won
      * @param drawGame if true, it's a draw game.
      */
-    private void updateUI(boolean firstWin, boolean drawGame)
+    private void updateResultIcons(boolean firstWin, boolean drawGame)
     {
         if (firstWin)
         {
             firstCup.setVisibility(View.VISIBLE);
-            secondCup.setVisibility(View.GONE);
-            drawIcon.setVisibility(View.GONE);
+            secondCup.setVisibility(View.INVISIBLE);
+            drawIcon.setVisibility(View.INVISIBLE);
         }
         else
         {
             if (drawGame)
             {
-                firstCup.setVisibility(View.GONE);
-                secondCup.setVisibility(View.GONE);
+                firstCup.setVisibility(View.INVISIBLE);
+                secondCup.setVisibility(View.INVISIBLE);
                 drawIcon.setVisibility(View.VISIBLE);
             }
             else
             {
-                firstCup.setVisibility(View.GONE);
+                firstCup.setVisibility(View.INVISIBLE);
                 secondCup.setVisibility(View.VISIBLE);
-                drawIcon.setVisibility(View.GONE);
+                drawIcon.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+    /**
+     * Put every players' button at the right place
+     */
+    private void resetActionButtonsState()
+    {
+        // Actions
+        GameAction fpAction = firstPlayer.getLastAction();
+        GameAction spAction = secondPlayer.getLastAction();
+
+        // First player reset state
+        if (fpAction instanceof RockAction)
+        {
+            animateSelectedButton(firstPlayerRock, false);
+        }
+        else if (fpAction instanceof PaperAction)
+        {
+            animateSelectedButton(firstPlayerPaper, false);
+        }
+        else if (fpAction instanceof ScissorsAction)
+        {
+            animateSelectedButton(firstPlayerScissors, false);
+        }
+
+        // Second player reset state
+        if (spAction instanceof RockAction)
+        {
+            animateSelectedButton(secondPlayerRock, true);
+        }
+        else if (spAction instanceof PaperAction)
+        {
+            animateSelectedButton(secondPlayerPaper, true);
+        }
+        else if (spAction instanceof ScissorsAction)
+        {
+            animateSelectedButton(secondPlayerScissors, true);
+        }
+    }
+
+    /**
+     * Animate the X position of the given view on X axis, to the right or to the left.
+     *
+     * @param view             the view to animate.
+     * @param translateToRight if true, move view to right; otherwise move view to left.
+     */
+    private void animateSelectedButton(View view, boolean translateToRight)
+    {
+        float dx = 0f;
+        if (translateToRight)
+        {
+            dx = view.getX() + view.getWidth();
+        }
+        else
+        {
+            dx = view.getX() - view.getWidth();
+        }
+
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "x", dx);
+        animator.setDuration(300);
+        animator.start();
     }
 
     /**

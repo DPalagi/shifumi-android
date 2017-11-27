@@ -50,23 +50,13 @@
             android:layout_marginTop="8dp"
             >
 
-        <ImageView
-                android:id="@+id/battle_first_cup"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:tint="@color/colorText"
-                android:src="@drawable/ic_trophy"
-                android:layout_alignParentLeft="true"
-                android:visibility="gone"
-                />
-
         <TextView
                 android:id="@+id/battle_timer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextStyle.Title"
                 tools:text="3"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 android:visibility="gone"
                 />
 
@@ -74,10 +64,21 @@
                 android:id="@+id/battle_game_action"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                tools:src="@drawable/ic_play_circle_outline"
+                android:src="@drawable/ic_play_circle_outline"
                 android:layout_centerHorizontal="true"
                 style="@style/ImageButtonStyle"
                 android:background="@android:color/transparent"
+                />
+
+        <ImageView
+                android:id="@+id/battle_first_cup"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:tint="@color/colorText"
+                android:src="@drawable/ic_trophy"
+                android:layout_alignParentLeft="true"
+                android:visibility="invisible"
+                android:layout_below="@id/battle_game_action"
                 />
 
         <ImageView
@@ -88,7 +89,7 @@
                 android:src="@drawable/ic_equality"
                 android:layout_centerInParent="true"
                 android:layout_below="@id/battle_game_action"
-                android:visibility="gone"
+                android:visibility="invisible"
                 />
 
         <ImageView
@@ -98,7 +99,8 @@
                 android:tint="@color/colorText"
                 android:src="@drawable/ic_trophy"
                 android:layout_alignParentRight="true"
-                android:visibility="gone"
+                android:layout_below="@id/battle_game_action"
+                android:visibility="invisible"
                 />
 
     </RelativeLayout>
