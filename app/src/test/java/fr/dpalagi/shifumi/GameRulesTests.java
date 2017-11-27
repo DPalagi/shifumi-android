@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Local unit testing about {@link GameAction} class and comparison during game
  */
-public class GameActionTests
+public class GameRulesTests
 {
     /* Actions to compare */
     RockAction rockAction;
@@ -50,5 +50,13 @@ public class GameActionTests
         assertEquals(rockAction.versus(rockAction), GameAction.FightEnum.DRAW);
         assertEquals(paperAction.versus(paperAction), GameAction.FightEnum.DRAW);
         assertEquals(scissorsAction.versus(scissorsAction), GameAction.FightEnum.DRAW);
+    }
+
+    @Test
+    public void testNullVersus() throws Exception
+    {
+        assertEquals(rockAction.versus(null), GameAction.FightEnum.WIN);
+        assertEquals(paperAction.versus(null), GameAction.FightEnum.WIN);
+        assertEquals(scissorsAction.versus(null), GameAction.FightEnum.WIN);
     }
 }

@@ -1,6 +1,7 @@
 package fr.dpalagi.shifumi.fragments;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,9 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import fr.dpalagi.shifumi.R;
+import fr.dpalagi.shifumi.model.GameAction;
+import fr.dpalagi.shifumi.model.IAPlayer;
+import fr.dpalagi.shifumi.model.PaperAction;
 import fr.dpalagi.shifumi.model.Player;
+import fr.dpalagi.shifumi.model.RockAction;
+import fr.dpalagi.shifumi.model.ScissorsAction;
 
 /**
  * BattleFragment is where the battle happens. Contains all code to interact with user during the game: UI, animations etc...
@@ -44,6 +51,16 @@ public class BattleFragment extends Fragment
     private ImageView firstPlayerIcon;
 
     /**
+     * Icons to display at end of the game
+     */
+    private ImageView drawIcon, firstCup, secondCup;
+
+    /**
+     * Text to display as timer
+     */
+    private TextView timerText;
+
+    /**
      * Players of the game; can be human or IA.
      */
     private Player firstPlayer, secondPlayer;
@@ -53,8 +70,11 @@ public class BattleFragment extends Fragment
      */
     private boolean hasHuman;
 
+    private CountDownTimer timer;
+
     /* Keys to pass data into fragment instance */
     private static final String HAS_HUMAN_KEY = "has_human_in_game";
+    private static final int TIMER_MILLI_SEC = 3000;
 
     // endregion
 
@@ -76,6 +96,13 @@ public class BattleFragment extends Fragment
         secondPlayerScissors = layout.findViewById(R.id.battle_sp_scissors);
         firstPlayerIcon = layout.findViewById(R.id.battle_fp_icon);
         gameControlButton = layout.findViewById(R.id.battle_game_action);
+        timerText = layout.findViewById(R.id.battle_timer);
+        drawIcon = layout.findViewById(R.id.battle_equality_icon);
+        firstCup = layout.findViewById(R.id.battle_first_cup);
+        secondCup = layout.findViewById(R.id.battle_second_cup);
+
+        // Get game action ready to go
+        gameControlButton.setImageResource(R.drawable.ic_play_circle_outline);
 
         // Extract config params ==> consider that user can play by default
         Bundle args = getArguments();
@@ -83,6 +110,17 @@ public class BattleFragment extends Fragment
 
         // Setup UI and event listeners
         setupUI(hasHuman);
+
+        // Create players
+        if (hasHuman)
+        {
+            firstPlayer = new Player();
+        }
+        else
+        {
+            firstPlayer = new IAPlayer();
+        }
+        secondPlayer = new IAPlayer();
 
         return layout;
     }
@@ -103,11 +141,172 @@ public class BattleFragment extends Fragment
         if (forHuman)
         {
             firstPlayerIcon.setImageResource(R.drawable.ic_person);
-            // TODO listeners
+            // Listeners
+            firstPlayerRock.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    firstPlayer.play(new RockAction());
+                }
+            });
+            firstPlayerPaper.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    firstPlayer.play(new PaperAction());
+                }
+            });
+            firstPlayerScissors.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    firstPlayer.play(new ScissorsAction());
+                }
+            });
         }
         else
         {
             firstPlayerIcon.setImageResource(R.drawable.ic_robot);
+        }
+
+        // Listeners for game action
+        gameControlButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                startTimer();
+            }
+        });
+    }
+
+    /**
+     * Start the chrono of 4 secs and define actions related to him
+     */
+    private void startTimer()
+    {
+        if (timer == null)
+        {
+            timer = new CountDownTimer(TIMER_MILLI_SEC, 1000)
+            {
+                @Override
+                public void onTick(long l)
+                {
+                    timerText.setText("" + l / 1000);
+                }
+
+                @Override
+                public void onFinish()
+                {
+                    // Let P2 play
+                    if (secondPlayer instanceof IAPlayer)
+                    {
+                        ((IAPlayer) secondPlayer).playRandom();
+                    }
+
+                    // Hide timer
+                    timerText.setVisibility(View.GONE);
+                    // Display again
+                    gameControlButton.setVisibility(View.VISIBLE);
+                    announceRoundResult();
+                }
+            };
+        }
+
+        // Clean UI state
+        gameControlButton.setVisibility(View.INVISIBLE);
+        timerText.setVisibility(View.VISIBLE);
+
+        drawIcon.setVisibility(View.GONE);
+        firstCup.setVisibility(View.GONE);
+        secondCup.setVisibility(View.GONE);
+
+        // Reset users actions
+        firstPlayer.resetLastAction();
+        secondPlayer.resetLastAction();
+
+        // First player plays first
+        if (firstPlayer instanceof IAPlayer)
+        {
+            ((IAPlayer) firstPlayer).playRandom();
+        }
+
+        // Start count down
+        timer.start();
+    }
+
+    /**
+     * Compare the GameAction of each player to tell who wins, loses or if there is a draw
+     */
+    private void announceRoundResult()
+    {
+        // Last actions of each player, to compare
+        GameAction fpAction = firstPlayer.getLastAction();
+        GameAction spAction = secondPlayer.getLastAction();
+
+        // First player has played something ==> look at result
+        if (firstPlayer.hasAlreadyPlayed())
+        {
+            switch (fpAction.versus(spAction))
+            {
+                case WIN:
+                    updateUI(true, false);
+                    break;
+                case DRAW:
+                    updateUI(false, true);
+                    break;
+                case LOSE:
+                    updateUI(false, false);
+                    break;
+            }
+        }
+        // First player didn't play ==> draw or loose
+        else
+        {
+            // Draw
+            if (!secondPlayer.hasAlreadyPlayed())
+            {
+                updateUI(false, true);
+            }
+            // Lose
+            else
+            {
+                updateUI(false, false);
+            }
+        }
+    }
+
+    /**
+     * Update the UI according to round result
+     *
+     * @param firstWin if true, first player has won. If false, can be draw or second player won
+     * @param drawGame if true, it's a draw game.
+     */
+    private void updateUI(boolean firstWin, boolean drawGame)
+    {
+        if (firstWin)
+        {
+            firstCup.setVisibility(View.VISIBLE);
+            secondCup.setVisibility(View.GONE);
+            drawIcon.setVisibility(View.GONE);
+        }
+        else
+        {
+            if (drawGame)
+            {
+                firstCup.setVisibility(View.GONE);
+                secondCup.setVisibility(View.GONE);
+                drawIcon.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                firstCup.setVisibility(View.GONE);
+                secondCup.setVisibility(View.VISIBLE);
+                drawIcon.setVisibility(View.GONE);
+            }
         }
     }
 

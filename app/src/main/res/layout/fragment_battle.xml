@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:tools="http://schemas.android.com/tools"
         android:background="@color/colorBackground"
         android:orientation="vertical"
         android:padding="8dp"
@@ -61,7 +61,7 @@
                 />
 
         <TextView
-                android:id="@+id/battle_chrono"
+                android:id="@+id/battle_timer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextStyle.Title"
@@ -75,8 +75,20 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 tools:src="@drawable/ic_play_circle_outline"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 style="@style/ImageButtonStyle"
+                android:background="@android:color/transparent"
+                />
+
+        <ImageView
+                android:id="@+id/battle_equality_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:tint="@color/colorText"
+                android:src="@drawable/ic_equality"
+                android:layout_centerInParent="true"
+                android:layout_below="@id/battle_game_action"
+                android:visibility="gone"
                 />
 
         <ImageView

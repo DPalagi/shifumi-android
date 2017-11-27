@@ -21,6 +21,12 @@ public class PaperAction extends GameAction
     @Override
     public FightEnum versus(GameAction action)
     {
+        if (action == null)
+        {
+            return FightEnum.WIN;
+        }
+
+
         // Paper > Rock : win
         if (action instanceof RockAction)
         {
